@@ -225,15 +225,10 @@ app.delete("/app/delete/user/:id", (req, res) => {
     const info = stmt.run(req.params.id)
     res.status(200).json(info)
 });
-// Default response for any other request
-app.use(function(req, res){
-	res.json({"message":"Endpoint not found. (404)"});
-    res.status(404);
-});
 
 //default error message
 app.use(function(req,res){
-    res.status(404).send("endpoint does not Exist")
+    res.status(404).send("Error test successful")
     res.type("text/plain")
 }
 )
