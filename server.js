@@ -174,7 +174,7 @@ app.get('/app/flip/call/tails', (req, res) => {
     res.status(200).json(flipACoin("tails"))
     });
 
-
+/*/
 let logdata = {
     remoteaddr: req.ip,
     remoteuser: req.user,
@@ -187,7 +187,7 @@ let logdata = {
     referer: req.headers['referer'],
     useragent: req.headers['user-agent']
 }
-
+/*/
 // READ (HTTP method GET) at root endpoint /app/
 app.get("/app/", (req, res, next) => {
     res.json({"message":"Your API works! (200)"});
