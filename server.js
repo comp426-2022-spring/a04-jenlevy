@@ -56,8 +56,10 @@ server.js [options]
 `)
 
 const args = require('minimist')(process.argv.slice(2))
-args["port"]
+args["port", "debug", "log", "help"]
 var port = args.port || 5000 || process.env.PORT
+var debug = args.debug
+var log = args.log
 
 if (args.help){
     console.log(help)
