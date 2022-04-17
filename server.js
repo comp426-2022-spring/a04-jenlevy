@@ -188,6 +188,41 @@ let logdata = {
     useragent: req.headers['user-agent']
 }
 /*/
+
+app.use( (req, res, next) => {
+    // Your middleware goes here.
+    let logdata = {
+        remoteaddr: req.ip,
+        remoteuser: req.user,
+        time: Date.now(),
+        method: req.method,
+        url: req.url,
+        protocol: req.protocol,
+        httpversion: req.httpVersion,
+        status: res.statusCode,
+        referer: req.headers['referer'],
+        useragent: req.headers['user-agent']
+    }
+    const stmt = db.prepare('INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url, protocol, httpversion, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    const info = stmt.run(String(logdata.remoteaddr), String(logdata.remoteuser), String(logdata.time), 
+    String(logdata.method), String(logdata.url), String(logdata.protocol), String(logdata.httpversion), 
+    String(logdata.status), String(logdata.referer), String(logdata.useragent))
+    
+    next();
+})
+
+
+if (debug == true){
+    app.get("/app/log/access/", (req, res, next) => {
+        res.json({"message":"Your API works! (200)"});
+        res.status(200);
+    });
+
+    app.get('app/error/', (req,res) => {
+        res.status(404).send("Error test successful.")
+    })
+
+}
 // READ (HTTP method GET) at root endpoint /app/
 app.get("/app/", (req, res, next) => {
     res.json({"message":"Your API works! (200)"});
@@ -246,7 +281,7 @@ app.delete("/app/delete/user/:id", (req, res) => {
 
 //default error message
 app.get('app/error/', (req,res) => {
-    res.status(500).send("Error test successful.")
+    res.status(404).send("Error test successful.")
 }
 )
 
