@@ -231,15 +231,15 @@ app.use(function(req, res){
     res.status(404);
 });
 
-process.on('SIGTERM', () => {
-    server.close(() => {
-        console.log('Server stopped')
-    })
-})
-
 //default error message
 app.use(function(req,res){
     res.status(404).send("endpoint does not Exist")
     res.type("text/plain")
 }
 )
+
+process.on('SIGTERM', () => {
+    server.close(() => {
+        console.log('Server stopped')
+    })
+})
