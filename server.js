@@ -231,7 +231,7 @@ app.delete("/app/delete/user/:id", (req, res) => {
 });
 
 //default error message
-app.use(function(req,res){
+app.get('app/error/', (req,res) => {
     res.status(404).send("Error test successful.")
     res.type("text/plain")
 }
