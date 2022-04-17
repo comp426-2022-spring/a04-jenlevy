@@ -2,7 +2,7 @@
 const express = require('express')
 const { count } = require('yargs')
 const app = express()
-pp.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 //morgan
