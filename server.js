@@ -4,10 +4,8 @@ const { count } = require('yargs')
 const app = express()
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
 //morgan
 const morgan = require("morgan")
-
 /*/ Use morgan for logging, use the command npx nodemon server.js
 
 app.use(morgan('tiny'))
@@ -17,7 +15,6 @@ app.use(morgan('short'))
 app.use(morgan('dev'))
 
 /*/
-
 /*/example from class
 
 app.use(fs.writeFile('./access.log', data,
@@ -33,10 +30,8 @@ app.use(fs.writeFile('./access.log', data,
 )
 
 /*/
-
 const fs = require('fs')
 const db = require('./database.js')
-
 // Store help text 
 const help = (`
 server.js [options]
@@ -54,15 +49,16 @@ server.js [options]
 
 --help	Return this message and exit.
 `)
-
 const args = require('minimist')(process.argv.slice(2))
 args["port", "debug", "log", "help"]
-var port = args.port || 5000 || process.env.PORT
-var debug = args.debug
-var log = args.log
+const port = args.port || 5000 || process.env.PORT
+const debug = args.debug
+const log = args.log
+
 
 if (args.help){
     console.log(help)
+    process.exit(0)
 }
 
 if (log == true){
@@ -153,53 +149,13 @@ app.get('/app/', (req, res) => {
         res.end(res.statusCode+ ' ' +res.statusMessage)
     });
 
-//flip endpoint (one flip)
-app.get('/app/flip', (req, res) => {
-    
-    const result = coinFlip()
-    res.status(200).json({"flip": result})
+// READ (HTTP method GET) at root endpoint /app/
+app.get("/app/", (req, res, next) => {
+    res.json({"message":"Your API works! (200)"});
+	res.status(200);
+});
 
-    });
-
-//flips endpoint (many flips)
-app.get('/app/flips/:number', (req, res) => {
-    
-    const results = coinFlips(req.params.number)
-    const summary = countFlips(results)
-    res.status(200).json({"raw": results, "summary": summary})
-
-    });
-
-//flip while calling heads endpoing
-app.get('/app/flip/call/heads', (req, res) => {
-    var resStatusCode = 200
-
-    res.status(200).json(flipACoin("heads"))
-    });
-
-//flip while calling tails endpoint
-app.get('/app/flip/call/tails', (req, res) => {
-    var resStatusCode = 200
-
-    res.status(200).json(flipACoin("tails"))
-    });
-
-/*/
-let logdata = {
-    remoteaddr: req.ip,
-    remoteuser: req.user,
-    time: Date.now(),
-    method: req.method,
-    url: req.url,
-    protocol: req.protocol,
-    httpversion: req.httpVersion,
-    status: res.statusCode,
-    referer: req.headers['referer'],
-    useragent: req.headers['user-agent']
-}
-/*/
-
-app.use( (req, res, next) => {
+app.use((req, res, next) => {
     // Your middleware goes here.
     let logdata = {
         remoteaddr: req.ip,
@@ -234,11 +190,7 @@ if (debug == true){
     })
 
 }
-// READ (HTTP method GET) at root endpoint /app/
-app.get("/app/", (req, res, next) => {
-    res.json({"message":"Your API works! (200)"});
-	res.status(200);
-});
+
 
 // Define other CRUD API endpoints using express.js and better-sqlite3
 // CREATE a new user (HTTP method POST) at endpoint /app/new/
@@ -295,6 +247,40 @@ app.get('app/error/', (req,res) => {
     res.status(404).send("Error test successful.")
 }
 )
+
+
+//flip endpoint (one flip)
+app.get('/app/flip', (req, res) => {
+    
+    const result = coinFlip()
+    res.status(200).json({"flip": result})
+
+    });
+
+//flips endpoint (many flips)
+app.get('/app/flips/:number', (req, res) => {
+    
+    const results = coinFlips(req.params.number)
+    const summary = countFlips(results)
+    res.status(200).json({"raw": results, "summary": summary})
+
+    });
+
+//flip while calling heads endpoing
+app.get('/app/flip/call/heads', (req, res) => {
+    var resStatusCode = 200
+
+    res.status(200).json(flipACoin("heads"))
+    });
+
+//flip while calling tails endpoint
+app.get('/app/flip/call/tails', (req, res) => {
+    var resStatusCode = 200
+
+    res.status(200).json(flipACoin("tails"))
+    });
+
+
 
 process.on('SIGTERM', () => {
     server.close(() => {
