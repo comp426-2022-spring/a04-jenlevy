@@ -59,6 +59,10 @@ const args = require('minimist')(process.argv.slice(2))
 args["port"]
 var port = args.port || 5000 || process.env.PORT
 
+if (args.help){
+    console.log(help)
+}
+
 // one random coin flip
 function coinFlip() {
     let flip = Math.random()
