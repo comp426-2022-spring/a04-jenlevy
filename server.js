@@ -214,8 +214,9 @@ app.use( (req, res, next) => {
 
 if (debug == true){
     app.get("/app/log/access/", (req, res, next) => {
-        res.json({"message":"Your API works! (200)"});
-        res.status(200);
+    const stmt = db.prepare('SELECT * FROM cats WHERE name = ?');
+    const cats = stmt.all('Joey');
+
     });
 
     app.get('app/error/', (req,res) => {
