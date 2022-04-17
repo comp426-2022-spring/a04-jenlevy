@@ -174,6 +174,20 @@ app.get('/app/flip/call/tails', (req, res) => {
     res.status(200).json(flipACoin("tails"))
     });
 
+
+let logdata = {
+    remoteaddr: req.ip,
+    remoteuser: req.user,
+    time: Date.now(),
+    method: req.method,
+    url: req.url,
+    protocol: req.protocol,
+    httpversion: req.httpVersion,
+    status: res.statusCode,
+    referer: req.headers['referer'],
+    useragent: req.headers['user-agent']
+}
+
 // READ (HTTP method GET) at root endpoint /app/
 app.get("/app/", (req, res, next) => {
     res.json({"message":"Your API works! (200)"});
@@ -232,8 +246,7 @@ app.delete("/app/delete/user/:id", (req, res) => {
 
 //default error message
 app.get('app/error/', (req,res) => {
-    res.status(404).send("Error test successful.")
-    res.type("text/plain")
+    res.status(500).send("Error test successful.")
 }
 )
 
