@@ -133,12 +133,6 @@ function countFlips(array) {
     return {"heads" : heads, "tails": tails}
 }
 
-// READ (HTTP method GET) at root endpoint /app/
-app.get("/app/", (req, res) => {
-    res.json({"message":"Your API works! (200)"});
-	res.status(200);
-});
-
 app.use((req, res, next) => {
     // Your middleware goes here.
     let logdata = {
@@ -160,6 +154,12 @@ app.use((req, res, next) => {
     
     next();
 })
+
+// READ (HTTP method GET) at root endpoint /app/
+app.get("/app/", (req, res) => {
+    res.json({"message":"Your API works! (200)"});
+	res.status(200);
+});
 
 
 if (debug == true){
@@ -188,12 +188,6 @@ app.use(morgan("combined", { stream: accessLogObj }))
 } else {
     app.use(morgan("combined"))
 }
-
-//default error message
-app.get('app/error/', (req,res) => {
-    res.status(404).send("Error test successful.")
-}
-)
 
 
 //flip endpoint (one flip)
@@ -227,6 +221,11 @@ app.get('/app/flip/call/tails', (req, res) => {
     res.status(200).json(flipACoin("tails"))
     });
 
+    //default error message
+app.get('app/error/', (req,res) => {
+    res.status(404).send("Error test successful.")
+}
+)
 
 
 process.on('SIGTERM', () => {
