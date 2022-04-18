@@ -169,13 +169,13 @@ app.use((req, res, next) => {
 
 
 if (debug === true){
-    app.get("/app/log/access/", (req, res, next) => {
+    app.get("/app/log/access", (req, res, next) => {
     const stmt = db.prepare('SELECT * FROM accesslog');
     const stmtAll = stmt.all();
     res.status(200).json(stmtAll)
     });
 
-    app.get('app/error/', (req,res) => {
+    app.get('app/error', (req,res) => {
         res.status(404).send("Error test successful.")
     })
 
