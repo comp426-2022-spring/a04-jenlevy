@@ -2,7 +2,7 @@
 const Database = require("better-sqlite3")
 
 //creating new database 'logdb'
-const db = new Database("logdb")
+const db = new Database("log.db")
 
 
 const stmt = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' and name='accesslog';`);
