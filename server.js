@@ -63,13 +63,12 @@ if (help === true ){
     process.exit(0)
 }
 
-if (log === true){
+if (log){
     // Use morgan for logging to files
 // Create a write stream to append (flags: 'a') to a file
 const accessLogObj = fs.createWriteStream('./access.log', { flags: 'a' })
 // Set up the access logging middleware
 app.use(morgan('combined', { stream: accessLogObj }))
-
 }
 // one random coin flip
 function coinFlip() {
@@ -164,6 +163,8 @@ app.use((req, res, next) => {
     const stmt = db.prepare(`INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url, protocol, httpversion, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
     const info = stmt.run(logdata.remoteaddr, logdata.remoteuser, logdata.time, logdata.method, logdata.url, logdata.protocol, logdata.httpversion, logdata.status, logdata.referer, logdata.useragent)
     
+    console.log(remoteaddr)
+
     next();
 })
 
