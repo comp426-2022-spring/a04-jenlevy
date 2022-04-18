@@ -63,6 +63,10 @@ if (help === true ){
     process.exit(0)
 }
 
+const server = app.listen(port, () => {
+    console.log('App listening on port %PORT%'.replace('%PORT%',port))
+});
+
 if (log == true){
     // Use morgan for logging to files
 // Create a write stream to append (flags: 'a') to a file
@@ -137,10 +141,6 @@ function countFlips(array) {
     }
     return {"heads" : heads, "tails": tails}
 }
-
-const server = app.listen(port, () => {
-    console.log('App listening on port %PORT%'.replace('%PORT%',port))
-});
 
 // READ (HTTP method GET) at root endpoint /app/
 app.get("/app/", (req, res) => {
