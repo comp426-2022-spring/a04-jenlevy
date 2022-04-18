@@ -172,11 +172,15 @@ app.use((req, res, next) => {
 
 
 if (debug === true){
+    try{
     app.get("/app/log/access", (req, res, next) => {
     const stmt = db.prepare('SELECT * FROM accesslog');
     const stmtAll = stmt.all();
     res.status(200).json(stmtAll)
     });
+} catch (e) {
+    console.error(e)
+}
 
     app.get('/app/error', (req,res) => {
         res.status(404).send("Error test successful.")
@@ -184,56 +188,6 @@ if (debug === true){
 
 }
 
-
-// Define other CRUD API endpoints using express.js and better-sqlite3
-// CREATE a new user (HTTP method POST) at endpoint /app/new/
-app.post("/app/new/user", (req, res, next) => {
-    let data = {
-        user: req.body.username,
-        pass: req.body.password
-    }
-    const stmt = db.prepare('INSERT INTO userinfo (username, password) VALUES (?, ?)')
-    const info = stmt.run(data.user, data.pass)
-    res.status(200).json(info)
-});
-// READ a list of users (HTTP method GET) at endpoint /app/users/
-app.get("/app/users", (req, res) => {	
-    try {
-        const stmt = db.prepare('SELECT * FROM userinfo').all()
-        res.status(200).json(stmt)
-    } catch {
-        console.error(e)
-    }
-});
-
-// READ a single user (HTTP method GET) at endpoint /app/user/:id
-app.get("/app/user/:id", (req, res) => {
-    try {
-        const stmt = db.prepare('SELECT * FROM userinfo WHERE id = ?').get(req.params.id);
-        res.status(200).json(stmt)
-    } catch (e) {
-        console.error(e)
-    }
-
-});
-
-// UPDATE a single user (HTTP method PATCH) at endpoint /app/update/user/:id
-app.patch("/app/update/user/:id", (req, res) => {
-    let data = {
-        user: req.body.username,
-        pass: req.body.password
-    }
-    const stmt = db.prepare('UPDATE userinfo SET username = COALESCE(?,username), password = COALESCE(?,password) WHERE id = ?')
-    const info = stmt.run(data.user, data.pass, req.params.id)
-    res.status(200).json(info)
-});
-
-// DELETE a single user (HTTP method DELETE) at endpoint /app/delete/user/:id
-app.delete("/app/delete/user/:id", (req, res) => {
-    const stmt = db.prepare('DELETE FROM userinfo WHERE id = ?')
-    const info = stmt.run(req.params.id)
-    res.status(200).json(info)
-});
 
 //default error message
 app.get('app/error/', (req,res) => {
