@@ -1,11 +1,10 @@
 //express
 const express = require('express')
-const { count } = require('yargs')
 const app = express()
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 //morgan
-const morgan = require("morgan")
+const morgan = require('morgan')
 /*/ Use morgan for logging, use the command npx nodemon server.js
 
 app.use(morgan('tiny'))
@@ -33,7 +32,7 @@ app.use(fs.writeFile('./access.log', data,
 const fs = require('fs')
 const db = require('./database.js')
 // Store help text 
-const help = (`
+const helpText = (`
 server.js [options]
 
 --port	Set the port number for the server to listen on. Must be an integer
@@ -54,14 +53,15 @@ args["port", "debug", "log", "help"]
 const port = args.port || 5000 || process.env.PORT
 const debug = args.debug
 const log = args.log
+const help = args.help
 
 
-if (args.help){
-    console.log(help)
+if (help === true ){
+    console.log(helpText)
     process.exit(0)
 }
 
-if (log == true){
+if (log === true){
     // Use morgan for logging to files
 // Create a write stream to append (flags: 'a') to a file
 const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' })
@@ -139,18 +139,8 @@ const server = app.listen(port, () => {
     console.log('App listening on port %PORT%'.replace('%PORT%',port))
 });
 
-//default check endpoint
-app.get('/app/', (req, res) => {
-    // Respond with status 200
-        res.statusCode = 200;
-    // Respond with status message "OK"
-        res.statusMessage = 'OK';
-        res.writeHead( res.statusCode, { 'Content-Type' : 'text/plain' });
-        res.end(res.statusCode+ ' ' +res.statusMessage)
-    });
-
 // READ (HTTP method GET) at root endpoint /app/
-app.get("/app/", (req, res, next) => {
+app.get("/app/", (req, res) => {
     res.json({"message":"Your API works! (200)"});
 	res.status(200);
 });
@@ -178,7 +168,7 @@ app.use((req, res, next) => {
 })
 
 
-if (debug == true){
+if (debug === true){
     app.get("/app/log/access/", (req, res, next) => {
     const stmt = db.prepare('SELECT * FROM accesslog');
     const stmtAll = stmt.all();
