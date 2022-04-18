@@ -174,7 +174,7 @@ if (debug == true){
 }
 
     app.get('/app/error', (req,res) => {
-        res.status(500).send("Error test successful.")
+        throw new Error("Error test successful.")
     })
 
 }
