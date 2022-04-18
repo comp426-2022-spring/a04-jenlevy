@@ -67,15 +67,6 @@ const server = app.listen(port, () => {
     console.log('App listening on port %PORT%'.replace('%PORT%',port))
 });
 
-if (log == true){
-    // Use morgan for logging to files
-// Create a write stream to append (flags: 'a') to a file
-const accessLogObj = fs.createWriteStream('./access.log', { flags: 'a' })
-// Set up the access logging middleware
-app.use(morgan("combined", { stream: accessLogObj }))
-} else {
-    app.use(morgan("combined"))
-}
 // one random coin flip
 function coinFlip() {
     let flip = Math.random()
@@ -171,7 +162,7 @@ app.use((req, res, next) => {
 })
 
 
-if (debug === true){
+if (debug == true){
     try{
     app.get("/app/log/access", (req, res, next) => {
     const stmt = db.prepare('SELECT * FROM accesslog');
@@ -183,11 +174,20 @@ if (debug === true){
 }
 
     app.get('/app/error', (req,res) => {
-        res.status(404).send("Error test successful.")
+        res.status(500).send("Error test successful.")
     })
 
 }
 
+if (log == true){
+    // Use morgan for logging to files
+// Create a write stream to append (flags: 'a') to a file
+const accessLogObj = fs.createWriteStream('./access.log', { flags: 'a' })
+// Set up the access logging middleware
+app.use(morgan("combined", { stream: accessLogObj }))
+} else {
+    app.use(morgan("combined"))
+}
 
 //default error message
 app.get('app/error/', (req,res) => {
